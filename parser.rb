@@ -3,18 +3,6 @@ require 'set'
 require 'time'
 require 'date'
 
-String.class_eval do
-  def to_month_day
-    date = Date.strptime(to_s, '%m/%d/%Y')
-    return date.mon.to_s + "/" + date.day.to_s
-  end
-  
-  def to_day_month_year
-    date = Date.strptime(to_s, '%m/%d/%Y')
-    return date.day.to_s + "/" + date.mon.to_s + "/" + date.year.to_s
-  end
-end
-
 class Event
   attr_accessor :type, :length, :start
    
@@ -40,7 +28,8 @@ class ScheduleDate
   attr_accessor :date, :events
   
   def initialize(date)
-    @date =  date
+    #date has format MM/DD/YYYY
+    @date = date[0, 2].to_i.to_s + "/" + date[3, 2].to_i.to_s
     @events = Array.new
   end
   
@@ -52,13 +41,35 @@ end
 class ScheduleDates
   attr_accessor :dates
   
-  def initialize(dates)
-    @dates = Array.new(dates)
+  def initialize()
+    @dates = Array.new
   end
-  
+
+  def add(date)
+    dates << date
+  end
+
   def get_binding
     binding()
   end
+end
+
+def createTime(dateString, timeString)
+  #date has format MM/DD/YYYY
+  #time has format H:MM AM/PM
+  month = dateString[0, 2].to_i
+  day = dateString[3, 2].to_i
+  year = dateString[6, 4].to_i
+  
+  split = timeString.split(' ')
+  hour = split[0].split(':')[0].to_i
+  min = split[0].split(':')[1].to_i
+
+  if split[1] == "PM" and hour != 12
+    hour = hour + 12
+  end
+
+  return Time.mktime(year, month, day, hour, min)
 end
 
 relevant = Set.new ["Nurse", "Sleep", "Diaper", "Bottle"]
@@ -74,44 +85,53 @@ end
 startOfEventValues = Set.new ["Started bottle", "Start Nursing left", "Start Nursing right", "Fell asleep"]
 datesHash = Hash.new
 lastSeenStartTokens = Hash.new
+descendingKeyOrder = Array.new
 ascending.each do |tokens|
   dateString = tokens[1]
   
-  if datesHash.has_key?(dateString)
+  if datesHash.has_key? dateString
     date = datesHash[dateString]
   else
-    date = ScheduleDate.new(dateString.to_month_day)
+    date = ScheduleDate.new(dateString)
     datesHash[dateString] = date
+    descendingKeyOrder.insert(0, dateString)
   end
   
   type = tokens[0]
-  lineTime = Time.parse(dateString.to_day_month_year + " " + tokens[2])
-  if (type == "Diaper")
+  lineTime = createTime(dateString, tokens[2])
+  if type == "Diaper"
     date.addEvent(Event.new(type, lineTime, lineTime))
     next
   end
   
-  startTokens = lastSeenStartTokens[type]
-  if startTokens == nil
+  if startOfEventValues.include? tokens[3]
     lastSeenStartTokens[type] = tokens
     next
-  else
-    startTime = Time.parse(startTokens[1].to_day_month_year + " " + startTokens[2])
-    endTime = Time.parse(tokens[1].to_day_month_year + " " + tokens[2])
-    
-    if startTime.day != endTime.day
-      endOfStartDay = Time.mktime(startTime.year, startTime.mon, startTime.day, 23, 59, 59)
-      startOfEndDay = Time.mktime(endTime.year, endTime.mon, endTime.day)
-      date.addEvent(Event.new(type, startTime, endOfStartDay))
-      date.addEvent(Event.new(type, startOfEndDay, endTime))
-    else
-      date.addEvent(Event.new(type, startTime, endTime))
-    end
-    lastSeenStartTokens[type] = nil
   end
+
+  startTokens = lastSeenStartTokens[type]
+  if startTokens == nil
+    next
+  end
+
+  startTime = createTime(startTokens[1], startTokens[2])
+  endTime = createTime(tokens[1], tokens[2])
+    
+  if startTime.day != endTime.day
+    endOfStartDay = Time.mktime(startTime.year, startTime.mon, startTime.day, 23, 59, 59)
+    startOfEndDay = Time.mktime(endTime.year, endTime.mon, endTime.day)
+    date.addEvent(Event.new(type, startTime, endOfStartDay))
+    date.addEvent(Event.new(type, startOfEndDay, endTime))
+  else
+    date.addEvent(Event.new(type, startTime, endTime))
+  end
+  lastSeenStartTokens[type] = nil
 end
 
-dates = ScheduleDates.new(datesHash.values)
+dates = ScheduleDates.new
+descendingKeyOrder.each do |key|
+  dates.add(datesHash[key])
+end
 
 file = File.open("baby-schedule.template", "rb")
 template = file.read
