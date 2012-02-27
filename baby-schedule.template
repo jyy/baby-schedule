@@ -1,0 +1,45 @@
+<html>
+<head>
+  <title>baby-schedule</title>
+  <link rel="stylesheet" type="text/css" href="styles.css" />  
+  <link rel="stylesheet" type="text/css" href="hour.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="hour1">1a</div>
+    <div class="hour2">2a</div>
+    <div class="hour3">3a</div>
+    <div class="hour4">4a</div>
+    <div class="hour5">5a</div>
+    <div class="hour6">6a</div>
+    <div class="hour7">7a</div>
+    <div class="hour8">8a</div>
+    <div class="hour9">9a</div>
+    <div class="hour10">10a</div>
+    <div class="hour11">11a</div>
+    <div class="higlightedHour hour12">12p</div>
+    <div class="hour13">1p</div>
+    <div class="hour14">2p</div>
+    <div class="hour15">3p</div>
+    <div class="hour16">4p</div>
+    <div class="hour17">5p</div>
+    <div class="higlightedHour hour18">6p</div>
+    <div class="hour19">7p</div>
+    <div class="hour20">8p</div>
+    <div class="hour21">9p</div>
+    <div class="hour22">10p</div>
+    <div class="hour23">11p</div>
+  
+    <div class="hourHeaderSpacer">&nbsp;</div>
+
+    <% for @date in @dates %>
+    <div class="day">
+      <div class="date"><%= @date.date %></div>
+      <% for @event in @date.events %>
+      <div class="event <%= @event.type %>" style="width: <%= @event.length %>; left: <%= @event.start %>"></div>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+</body>
+</html>
