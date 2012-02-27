@@ -2,12 +2,15 @@ body {
   overflow:auto;
 }
 
+.hidden {
+  display: none;
+  opacity
+}
+
 .container {
   position: relative;
   height: auto;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin: 20px;
   width: 98%;
   border: 1px solid black;
 }
@@ -36,7 +39,21 @@ body {
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  opacity:0.6;
+}
+
+.toggle {
+  float: left;
+  color: white;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 2px;
+  width: 50px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .higlightedHour {
@@ -45,18 +62,22 @@ body {
 
 .sleep {
   background-color: blue;
+  opacity: 0.6;
 }
 
 .nurse {
   background-color: red;
+  opacity: 0.6;
 }
 
 .diaper {
   background-color: black;
+  opacity: 0.6;
 }
 
 .bottle {
   background-color: green;
+  opacity: 0.6;
 }
 
 .date {

@@ -19,6 +19,9 @@ class Event
     else
       @length = secToPercentage(endTime.tv_sec - startTime.tv_sec)
     end
+    
+    puts "Added " + type + " event: " + startTime.to_s + " --- " + start + " / " + length
+
   end
   
   def secToPercentage(seconds)
@@ -56,6 +59,12 @@ class ScheduleDates
   end
 end
 
+def timeToKey(time)
+  month = time.mon < 10 ? "0" + time.mon.to_s : time.mon.to_s
+  day = time.day < 10 ? "0" + time.day.to_s : time.day.to_s
+  return month + "/" + day + "/" + time.year.to_s
+end
+
 def createTime(dateString, timeString)
   #date has format MM/DD/YYYY
   #time has format H:MM AM/PM
@@ -69,6 +78,8 @@ def createTime(dateString, timeString)
 
   if split[1] == "PM" and hour != 12
     hour = hour + 12
+  elsif split[1] == "AM" and hour == 12
+    hour = 0
   end
 
   return Time.mktime(year, month, day, hour, min)
@@ -77,30 +88,27 @@ end
 relevant = Set.new ["Nurse", "Sleep", "Diaper", "Bottle"]
 ascending = Array.new
 csvFile = File.new("activities.csv", "r")
+datesHash = Hash.new
+descendingKeyOrder = Array.new
 while (line = csvFile.gets)
   tokens = line.split(',')
   if relevant.include?(tokens[0])
     ascending.insert(0, tokens)
+    scheduleDate = datesHash[tokens[1]]
+    if scheduleDate == nil
+      datesHash[tokens[1]] = ScheduleDate.new(tokens[1])
+      descendingKeyOrder << tokens[1] 
+    end
   end
 end
 
 startOfEventValues = Set.new ["Started bottle", "Start Nursing left", "Start Nursing right", "Fell asleep"]
-datesHash = Hash.new
 lastSeenStartTokens = Hash.new
-descendingKeyOrder = Array.new
 ascending.each do |tokens|
-  dateString = tokens[1]
-  
-  if datesHash.has_key? dateString
-    date = datesHash[dateString]
-  else
-    date = ScheduleDate.new(dateString)
-    datesHash[dateString] = date
-    descendingKeyOrder.insert(0, dateString)
-  end
-  
+  date = datesHash[tokens[1]]
+
   type = tokens[0]
-  lineTime = createTime(dateString, tokens[2])
+  lineTime = createTime(tokens[1], tokens[2])
   if type == "Diaper"
     date.addEvent(Event.new(type, lineTime, lineTime))
     next
@@ -122,7 +130,8 @@ ascending.each do |tokens|
   if startTime.day != endTime.day
     endOfStartDay = Time.mktime(startTime.year, startTime.mon, startTime.day, 23, 59, 59)
     startOfEndDay = Time.mktime(endTime.year, endTime.mon, endTime.day)
-    date.addEvent(Event.new(type, startTime, endOfStartDay))
+    yesterday = datesHash[timeToKey(startTime)]
+    yesterday.addEvent(Event.new(type, startTime, endOfStartDay))
     date.addEvent(Event.new(type, startOfEndDay, endTime))
   else
     date.addEvent(Event.new(type, startTime, endTime))
