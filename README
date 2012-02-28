@@ -1,6 +1,5 @@
-1. setup webserver and serve the entire src.  for example, install lighttpd and create symlink in www root to baby-scheduler src files.
-2. ruby parser.rb <csv_file>
-3. open in browser (e.g. http://localhost/baby-scheduler/baby-scheduler.html)
+1. ruby parser.rb <csv_file>
+2. open generated baby-scheduler.html in browser
 
 TODOs:
 -generate only if source csv has changed
