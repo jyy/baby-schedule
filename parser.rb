@@ -5,7 +5,7 @@ require 'set'
 require './lib.rb'
 
 if ARGV.length < 1 or ARGV.length > 2
-  puts "ruby parser.rb <csv_file> [output]"
+  puts "usage: parser.rb csv_input_file [html_output_file]"
   exit
 end
 

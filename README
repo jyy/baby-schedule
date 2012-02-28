@@ -1,4 +1,4 @@
-1. ruby parser.rb <csv_file>
+1. ./parser.rb <csv_file>
 2. open generated baby-schedule.html in browser
 
 TODOs:
