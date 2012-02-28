@@ -4,7 +4,7 @@ require 'erb'
 require 'set'
 
 if ARGV.length != 1
-  puts "ruby parser.rb <csv>"
+  puts "ruby parser.rb <csv_file>"
   exit
 end
 
