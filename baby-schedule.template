@@ -27,13 +27,13 @@
     <div class="hour9">9a</div>
     <div class="hour10">10a</div>
     <div class="hour11">11a</div>
-    <div class="higlightedHour hour12">12p</div>
+    <div class="highlightedHour hour12">12p</div>
     <div class="hour13">1p</div>
     <div class="hour14">2p</div>
     <div class="hour15">3p</div>
     <div class="hour16">4p</div>
     <div class="hour17">5p</div>
-    <div class="higlightedHour hour18">6p</div>
+    <div class="highlightedHour hour18">6p</div>
     <div class="hour19">7p</div>
     <div class="hour20">8p</div>
     <div class="hour21">9p</div>

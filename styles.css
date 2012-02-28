@@ -51,8 +51,8 @@ body {
   cursor: pointer;
 }
 
-.higlightedHour {
-  border-left: solid 2px black; 
+.highlightedHour {
+  border-left: solid 2px #555 !important; 
 }
 
 .sleep {

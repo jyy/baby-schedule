@@ -19,8 +19,6 @@ class Event
     else
       @length = secToPercentage(endTime.tv_sec - startTime.tv_sec)
     end
-    
-    puts "Added " + type + " event: " + startTime.to_s + " --- " + start + " / " + length
 
   end
   
