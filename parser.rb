@@ -2,8 +2,6 @@
 
 require 'erb'
 require 'set'
-require 'time'
-require 'date'
 
 class Event
   attr_accessor :type, :length, :start
@@ -85,7 +83,11 @@ end
 
 relevant = Set.new ["Nurse", "Sleep", "Diaper", "Bottle"]
 ascending = Array.new
-csvFile = File.new("activities.csv", "r")
+
+file = "activities.csv"
+puts "reading " + file
+
+csvFile = File.new(file, "r")
 datesHash = Hash.new
 descendingKeyOrder = Array.new
 while (line = csvFile.gets)
@@ -102,6 +104,7 @@ end
 
 startOfEventValues = Set.new ["Started bottle", "Start Nursing left", "Start Nursing right", "Fell asleep"]
 lastSeenStartTokens = Hash.new
+eventsTotal = 0
 ascending.each do |tokens|
   date = datesHash[tokens[1]]
 
@@ -109,6 +112,7 @@ ascending.each do |tokens|
   lineTime = createTime(tokens[1], tokens[2])
   if type == "Diaper"
     date.addEvent(Event.new(type, lineTime, lineTime))
+    eventsTotal += 1
     next
   end
   
@@ -131,8 +135,10 @@ ascending.each do |tokens|
     yesterday = datesHash[timeToKey(startTime)]
     yesterday.addEvent(Event.new(type, startTime, endOfStartDay))
     date.addEvent(Event.new(type, startOfEndDay, endTime))
+    eventsTotal += 1
   else
     date.addEvent(Event.new(type, startTime, endTime))
+    eventsTotal += 1
   end
   lastSeenStartTokens[type] = nil
 end
@@ -142,12 +148,17 @@ descendingKeyOrder.each do |key|
   dates.add(datesHash[key])
 end
 
+puts "processed " + eventsTotal.to_s + " events"
+
 file = File.open("baby-schedule.template", "rb")
 template = file.read
 
 renderer = ERB.new(template)
 output = renderer.result(dates.get_binding)
 
+puts "writing html"
 outputFile = File.new("baby-schedule.html", "w")
 outputFile.write(output)
 outputFile.close
+
+puts "complete"
