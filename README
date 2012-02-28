@@ -7,5 +7,6 @@ Notes:
 -depends on Less css so must need IE 6+, Webkit, or Firefox.  see http://lesscss.org
 
 TODOs:
+-specify csv source from command line args
 -generate only if source csv has changed
 -get rid of Less as it was just used to generate the hour marker styles; will check-in generated css
