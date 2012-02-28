@@ -3,6 +3,13 @@
 require 'erb'
 require 'set'
 
+if ARGV.length != 1
+  puts "ruby parser.rb <csv>"
+  exit
+end
+
+file = ARGV[0]
+
 class Event
   attr_accessor :type, :length, :start
    
@@ -84,7 +91,6 @@ end
 relevant = Set.new ["Nurse", "Sleep", "Diaper", "Bottle"]
 ascending = Array.new
 
-file = "activities.csv"
 puts "reading " + file
 
 csvFile = File.new(file, "r")
