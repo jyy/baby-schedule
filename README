@@ -1,8 +1,8 @@
 1. ruby parser.rb <csv_file>
-2. open generated baby-scheduler.html in browser
+2. open generated baby-schedule.html in browser
 
 TODOs:
 -generate only if source csv has changed
 
 Example:
-http://dl.dropbox.com/u/5321284/baby-scheduler.html
+http://dl.dropbox.com/u/5321284/baby-schedule.html
