@@ -56,6 +56,9 @@ def timeToKey(time)
   return month + "/" + day + "/" + time.year.to_s
 end
 
+def createTime(timeString)
+end
+
 def createTime(dateString, timeString)
   #date has format MM/DD/YYYY
   #time has format H:MM AM/PM

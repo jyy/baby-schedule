@@ -2,6 +2,7 @@
 
 require 'erb'
 require 'set'
+require 'time'
 require './lib.rb'
 
 if ARGV.length < 1 or ARGV.length > 2
@@ -11,15 +12,25 @@ end
 
 inputFileName = ARGV[0]
 outputFileName = ARGV[1] == nil ? "baby-schedule.html" : ARGV[1]
+lastReadFileName = "/tmp/baby-schedule-last-read"
+
+if File.exists? lastReadFileName
+  lastReadCTime = Time.parse(File.new(lastReadFileName, "r").gets)
+  currentInputCTime = File.ctime(inputFileName)
+  if lastReadCTime >= currentInputCTime
+    puts "Input file is older or the same as last input file"
+    exit
+  end 
+end
+
+File.new(lastReadFileName, "w").puts File.ctime(inputFileName)
 
 relevant = Set.new ["Nurse", "Sleep", "Diaper", "Bottle"]
 ascending = Array.new
-
-puts "reading " + inputFileName
-
 csvFile = File.new(inputFileName, "r")
 datesHash = Hash.new
 descendingKeyOrder = Array.new
+puts "reading " + inputFileName
 while (line = csvFile.gets)
   tokens = line.split(',')
   if relevant.include?(tokens[0])
