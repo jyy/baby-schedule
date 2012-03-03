@@ -18,7 +18,7 @@ if File.exists? lastReadFileName
   lastReadCTime = Time.parse(File.new(lastReadFileName, "r").gets)
   currentInputCTime = File.ctime(inputFileName)
   if lastReadCTime >= currentInputCTime
-    puts "Input file is older or the same as last input file"
+    puts Time.new.to_s + ": Input file is older or the same as last input file"
     exit
   end 
 end
@@ -101,4 +101,4 @@ outputFile = File.new(outputFileName, "w")
 outputFile.write(output)
 outputFile.close
 
-puts "complete"
+puts Time.new.to_s + ": complete"
