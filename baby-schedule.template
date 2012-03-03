@@ -7,10 +7,13 @@
   <script src="scripts.js" type="text/javascript"></script>
 </head>
 <body>
-  <div id="sleepToggle" class="toggle sleep">Sleep</div>
-  <div id="bottleToggle" class="toggle bottle">Bottle</div>
-  <div id="nurseToggle" class="toggle nurse">Nurse</div>
-  <div id="diaperToggle" class="toggle diaper">Diaper</div>
+  <div>
+    <div id="sleepToggle" class="toggle sleep">Sleep</div>
+    <div id="bottleToggle" class="toggle bottle">Bottle</div>
+    <div id="nurseToggle" class="toggle nurse">Nurse</div>
+    <div id="diaperToggle" class="toggle diaper">Diaper</div>
+    <div class="generatedTimestamp">Generated: <%= Time.new %></div>
+  </div>
 
   <div style="clear: both"></div>
 

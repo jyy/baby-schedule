@@ -93,7 +93,6 @@ puts "processed " + eventsTotal.to_s + " events"
 
 file = File.open("baby-schedule.template", "rb")
 template = file.read
-
 renderer = ERB.new(template)
 output = renderer.result(dates.get_binding)
 
