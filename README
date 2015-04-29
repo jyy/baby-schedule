@@ -1,5 +1,2 @@
 1. ./parser.rb <csv_file>
 2. open generated baby-schedule.html in browser
-
-Example:
-http://dl.dropbox.com/u/5321284/baby-schedule/baby-schedule.html
